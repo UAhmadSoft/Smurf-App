@@ -10,6 +10,11 @@ const path = require('path');
 const hpp = require('hpp');
 
 const userRouter = require('./routers/userRouter');
+const taskerRouter=require('./routers/taskerRouter')
+const customerRouter=require('./routers/customerRouter')
+const taskRouter=require('./routers/taskRouter')
+const reviewRouter=require('./routers/reviewRouter')
+
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 
 
@@ -56,6 +61,10 @@ app.use((req,res,next) =>{
 
 // routes
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tasker', taskerRouter);
+app.use('/api/v1/customer',customerRouter);
+app.use('/api/v1/task',taskRouter);
+app.use('/api/v1/review',reviewRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {

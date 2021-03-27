@@ -10,6 +10,7 @@ const colors=require('colors')
 // });
 
 dotenv.config({path:'./config.env'})
+
 const app=require('./app')
 
 // database connection 
