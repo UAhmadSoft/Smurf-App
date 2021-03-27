@@ -18,7 +18,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
  
 });
 
-exports.getAllReviewsofTasker = catchAsync(async (req, res, next) => {
+exports.getReview = catchAsync(async (req, res, next) => {
     const reviews = await Review.findById(req.params.id);
     
     if (!reviews)
@@ -55,21 +55,4 @@ exports.createReview = catchAsync(async (req, res, next) => {
          review: newReview,
        }
     });
- });
- 
-//  exports.getTask = catchAsync(async (req, res, next) => {
-//     const task = await Task.findById(req.params.id);
- 
-//     if (!task)
-//        return res.status(404).json({
-//           status: 'failed',
-//           message: `No Task found against id ${req.params.id}`,
-//        });
- 
-//     res.status(200).json({
-//        status: 'success',
-//        data:{
-//          task
-//        }
-//     });
-//  });
+});

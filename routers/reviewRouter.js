@@ -12,6 +12,6 @@ router
    
 router
    .route('/:id')
-   .get(reviewController.getAllReviewsofTasker)
+   .get(reviewController.getReview)
 
 module.exports = router;
