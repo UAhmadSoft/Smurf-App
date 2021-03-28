@@ -12,6 +12,7 @@ const { Mongoose } = require('mongoose');
 //    return newObj;
 // };
 
+
 exports.getAllTaskers = catchAsync(async (req, res, next) => {
    const tasker = await Tasker.find();
 
@@ -31,7 +32,7 @@ exports.createTasker = catchAsync(async (req, res, next) => {
       taskerinfo: req.body.taskerinfo,
       address:req.body.address,
       contactNo:req.body.contactNo,
-      tasker:req.body.tasker
+      user:req.body.user
    });
 
    res.status(200).json({

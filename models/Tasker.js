@@ -15,22 +15,29 @@ const taskerSchema = new mongoose.Schema({
         type:'string',
         trim:'true'
     },
-    tasker:{
+    user:{
            type: mongoose.Schema.ObjectId,
             ref: 'User',
     },
+    review:[
+        {
+            type:mongoose.Schema.ObjectId,
+            ref:'Review',
+        }
+    ]
 })
 
 taskerSchema.pre(/^find/, function (next) {
     // this points to current query
     this.populate({
-      path: 'tasker',
+      path: 'user',
       select: '_id name email role',
+    }).populate({
+        path:'review'
     });
     next();
+
 });
-
-
 
 const Tasker = mongoose.model('Tasker', taskerSchema);
 module.exports = Tasker;

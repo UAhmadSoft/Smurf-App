@@ -22,7 +22,7 @@ const reviewSchema = new mongoose.Schema({
     },
     created_At: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
       },
 
 })
@@ -31,7 +31,8 @@ reviewSchema.pre(/^find/, function (next) {
     // this points to current query
     this.populate({
       path: 'customer',
-    })
+    });
+    
     next();
     
 });

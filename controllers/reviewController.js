@@ -1,12 +1,14 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Task=require('../models/Task');
+const Tasker=require('../models/Tasker');
 const Review=require('../models/Review');
 const { Mongoose } = require('mongoose');
 
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
     const reviews = await Review.find();
+    
     // SEND RESPONSE
     res.status(200).json({
        status: 'success',
@@ -21,6 +23,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 exports.getReview = catchAsync(async (req, res, next) => {
     const reviews = await Review.findById(req.params.id);
     
+    console.log(reviews)
     if (!reviews)
        return res.status(404).json({
           status: 'failed',
@@ -56,3 +59,8 @@ exports.createReview = catchAsync(async (req, res, next) => {
        }
     });
 });
+
+exports.getTaskerReviews=catchAsync(async (req, res, next) => {
+
+   const taskerReview=await Tasker.findById({reviews:req.params})
+})
