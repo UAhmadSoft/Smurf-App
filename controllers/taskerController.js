@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const Tasker=require('../models/Tasker');
+const Tasker = require('../models/Tasker');
 const { Mongoose } = require('mongoose');
 
 // const filterObj = (obj, ...allowedFields) => {
@@ -23,15 +23,14 @@ exports.getAllTaskers = catchAsync(async (req, res, next) => {
          tasker,
       },
    });
-
 });
 
 exports.createTasker = catchAsync(async (req, res, next) => {
    const newtasker = await Tasker.create({
       taskerinfo: req.body.taskerinfo,
-      address:req.body.address,
-      contactNo:req.body.contactNo,
-      tasker:req.body.tasker
+      address: req.body.address,
+      contactNo: req.body.contactNo,
+      details: req.body.tasker,
    });
 
    res.status(200).json({
@@ -83,9 +82,9 @@ exports.getTasker = catchAsync(async (req, res, next) => {
 
    res.status(200).json({
       status: 'success',
-      data:{
-         tasker
-      }
+      data: {
+         tasker,
+      },
    });
 });
 
