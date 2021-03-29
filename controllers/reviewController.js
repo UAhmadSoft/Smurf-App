@@ -93,7 +93,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
    });
 });
 
-exports.getTaskerReviews=catchAsync(async (req, res, next) => {
-
+exports.getTaskerReviews=catchAsync(async (req, res, next) => {  
    const taskerReview=await Tasker.findById({reviews:req.params})
 })

@@ -5,10 +5,10 @@ const { Mongoose } = require('mongoose');
 
 
 exports.getAllTasks = catchAsync(async (req, res, next) => {
-    const tasks = await Task.find();
+   const tasks = await Task.find();
  
     // SEND RESPONSE
-    res.status(200).json({
+   res.status(200).json({
        status: 'success',
        results: tasks.length,
        data: {
