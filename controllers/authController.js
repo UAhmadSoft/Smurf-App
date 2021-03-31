@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const Customer = require('../models/Customer');
 const Tasker = require('../models/Tasker');
-// const sendEmail = require('../utils/email');
+const sendMail = require('../utils/email');
 
 const signToken = (id) => {
   return jwt.sign({ id }, 'abc-ooppqq-ok-secrete-key', {
@@ -51,6 +51,27 @@ exports.signup = catchAsync(async (req, res, next) => {
       userInfo: user._id,
     });
   else return next(new AppError(`Plz provide a valid role`, 400));
+
+  // Generate Account Activation Link
+  const activationToken = user.createAccountActivationLink();
+
+  user.save({ validateBeforeSave: false });
+
+  // 4 Send it to Users Email
+  const activationURL = `${req.protocol}://${req.get(
+    'host'
+  )}/confirmMail/${activationToken}`;
+
+  const message = `GO to this link to activate your Smurf Account : ${activationURL} .`;
+
+  sendMail({
+    email: user.email,
+    message,
+    subject: 'Your Account Activation Link for Smurf App !',
+    user,
+    template: 'signupEmail.ejs',
+    url: activationURL,
+  });
 
   creatsendToken(newUser, 201, res);
 });

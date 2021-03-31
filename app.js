@@ -1,7 +1,7 @@
-const express=require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const cors = require('cors');
-const morgan=require('morgan')
+const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -10,35 +10,38 @@ const path = require('path');
 const hpp = require('hpp');
 
 const userRouter = require('./routers/userRouter');
-const taskerRouter=require('./routers/taskerRouter')
-const customerRouter=require('./routers/customerRouter')
-const taskRouter=require('./routers/taskRouter')
-const reviewRouter=require('./routers/reviewRouter')
+const taskerRouter = require('./routers/taskerRouter');
+const customerRouter = require('./routers/customerRouter');
+const taskRouter = require('./routers/taskRouter');
+const reviewRouter = require('./routers/reviewRouter');
 
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 
+const AppError = require('./utils/appError');
 
-const AppError=require('./utils/appError')
+// view engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.json())
+app.use(express.json());
 
-console.log(process.env.NODE_ENV)
+console.log(process.env.NODE_ENV);
 
 // set security http headers
 app.use(helmet());
 
-if(process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'))
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
 }
 
 // $ CORS
 app.use(cors());
 
-//  set limit request from same API in timePeroid from same ip 
+//  set limit request from same API in timePeroid from same ip
 const limiter = rateLimit({
-    max: 100, //   max number of limits
-    windowMs: 60 * 60 * 1000, // hour
-    message: ' Too many req from this IP , please Try  again in an Hour ! ',
+  max: 100, //   max number of limits
+  windowMs: 60 * 60 * 1000, // hour
+  message: ' Too many req from this IP , please Try  again in an Hour ! ',
 });
 
 app.use('/api', limiter);
@@ -50,28 +53,27 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize()); //   filter out the dollar signs protect from  query injection attact
 
 // Data sanitization against XSS
-app.use(xss()); //    protect from molision code coming from html  
-
+app.use(xss()); //    protect from molision code coming from html
 
 // testing middleware
-app.use((req,res,next) =>{
-    console.log("this is a middleware")     
-    next()
-})
+app.use((req, res, next) => {
+  console.log('this is a middleware');
+  next();
+});
 
 // routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tasker', taskerRouter);
-app.use('/api/v1/customer',customerRouter);
-app.use('/api/v1/task',taskRouter);
-app.use('/api/v1/review',reviewRouter);
+app.use('/api/v1/customer', customerRouter);
+app.use('/api/v1/task', taskRouter);
+app.use('/api/v1/review', reviewRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on the server`, 404));
+  next(new AppError(`Can't find ${req.originalUrl} on the server`, 404));
 });
 
-// error handling middleware 
-app.use(globalErrorHandler)
+// error handling middleware
+app.use(globalErrorHandler);
 
-module.exports= app
+module.exports = app;
