@@ -58,9 +58,11 @@ exports.signup = catchAsync(async (req, res, next) => {
   user.save({ validateBeforeSave: false });
 
   // 4 Send it to Users Email
-  const activationURL = `${req.protocol}://${req.get(
-    'host'
-  )}/confirmMail/${activationToken}`;
+  const activationURL = `localhost:5000/api/v1/users/confirmMail/${activationToken}`;
+
+  // const activationURL = `${req.protocol}://${req.get(
+  //   'host'
+  // )}/confirmMail/${activationToken}`;
 
   const message = `GO to this link to activate your Smurf Account : ${activationURL} .`;
 
@@ -171,3 +173,34 @@ exports.restrictTo = (...role) => {
     next();
   };
 };
+
+exports.confirmMail = catchAsync(async (req, res) => {
+  // 1 Hash The Avtivation Link
+  // console.log(req.params.activationLink);
+
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.activationLink)
+    .digest('hex');
+
+  // console.log(hashedToken);
+
+  const user = await User.findOne({
+    activationLink: hashedToken,
+  });
+
+  if (!user) {
+    // No Email Found , Redirect to /Login
+    return res.redirect('/');
+  }
+
+  // 3 Activate his Account
+  user.activated = true;
+  user.activationLink = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: 'Success',
+    message: 'Account Activated Successfully !',
+  });
+});
