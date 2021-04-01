@@ -8,6 +8,8 @@ router.post('/signUp', authController.signup);
 router.post('/login', authController.login);
 
 router.route('/confirmMail/:activationLink').get(authController.confirmMail);
+router.route('/forgotPassword').post(authController.forgotPassword);
+router.route('/resetPassword/:resetToken').post(authController.resetPassword);
 
 router.use(authController.protect); //  protect all router which are comming after this middleware
 
