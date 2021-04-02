@@ -108,7 +108,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (user.activated === false)
     return next(
       new AppError(
-        `Plz Activate your email by then Link sent to your email ${user.emil}`,
+        `Plz Activate your email by then Link sent to your email ${user.email}`,
         401
       )
     );
