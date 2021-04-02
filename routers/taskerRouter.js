@@ -1,19 +1,16 @@
 const express = require('express');
-const authController = require('../controllers/authController');
 const taskerController = require('../controllers/taskerController');
+const protect = require('../middlewares/protect');
+const restrictTo = require('../middlewares/restrictTo');
 
 const reviewRouter = require('./reviewRouter');
 
 const router = express.Router();
 
 router
-   .route('/')
-   .get(taskerController.getAllTaskers)
-   .post(
-      authController.protect,
-      authController.restrictTo('tasker'),
-      taskerController.createTasker
-   );
+  .route('/')
+  .get(taskerController.getAllTaskers)
+  .post(protect, restrictTo('tasker'), taskerController.createTasker);
 
 router.use('/:taskerId/reviews', reviewRouter);
 
