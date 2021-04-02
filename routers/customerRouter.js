@@ -1,21 +1,19 @@
 const express = require('express');
-const authController=require('../controllers/authController')
-const customerController=require('../controllers/customerController')
-
+const customerController = require('../controllers/customerController');
+const protect = require('../middlewares/protect');
+const restrictTo = require('../middlewares/restrictTo');
 
 const router = express.Router();
 
+router.route('/').get(customerController.getAllCustomers);
+// .post(protect, restrictTo('customer'), customerController.createCustomer);
 
 router
-   .route('/')
-   .get(customerController.getAllCustomers)
-   .post(authController.protect,authController.restrictTo('customer'),customerController.createCustomer);
+  .route('/:id')
+  .get(customerController.getCustomer)
+  .patch(protect, restrictTo('customer'), customerController.updateProfile);
 
-
-router
-   .route('/:id')
-   .get(customerController.getCustomer)
-   // .patch(taskerController.updateTasker)
-   // .delete(taskerController.deleteTasker);    
+// .patch(taskerController.updateTasker)
+// .delete(taskerController.deleteTasker);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const customerSchema = new mongoose.Schema({
-  customerinfo: {
+  bio: {
     type: String,
     //   required: [true, 'Please insert your info !'],
   },
@@ -32,8 +32,8 @@ const customerSchema = new mongoose.Schema({
 customerSchema.pre(/^find/, function (next) {
   // this points to current query
   this.populate({
-    path: 'customer',
-    select: '_id name email role -__v',
+    path: 'userInfo',
+    select: '_id name email role',
   });
   next();
 });
