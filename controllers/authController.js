@@ -11,7 +11,7 @@ const Tasker = require('../models/Tasker');
 
 const signToken = (id) => {
   return jwt.sign({ id }, 'abc-ooppqq-ok-secrete-key', {
-    // payload + secret + expire time
+      // payload + secret + expire time
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -86,6 +86,7 @@ exports.login = catchAsync(async (req, res, next) => {
     );
 
   let profile = { ...user };
+  
   console.log(`user`, user);
   if (user.role === 'customer') {
     profile = await Customer.findOne({
