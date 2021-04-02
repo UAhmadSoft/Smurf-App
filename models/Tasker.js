@@ -75,8 +75,8 @@ const taskerSchema = new mongoose.Schema({
 taskerSchema.pre(/^find/, function (next) {
   // this points to current query
   this.populate({
-    path: 'user',
-    select: '_id name email role -__v',
+    path: 'userInfo',
+    select: '_id name email role',
   });
 
   next();

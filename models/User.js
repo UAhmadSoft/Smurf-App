@@ -60,10 +60,9 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre(/^find/, function (next) {
-  this.select('-__v');
-  next();
-});
+// userSchema.pre(/^find/, function (next) {
+//   next();
+// });
 
 // Encrpt the password ad Presave it
 userSchema.pre('save', async function (next) {
