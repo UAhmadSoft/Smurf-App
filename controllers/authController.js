@@ -76,20 +76,22 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
   creatsendToken(newUser, 201, res);
+
 });
 
 exports.login = catchAsync(async (req, res, next) => {
+
   const { email, password } = req.body;
   console.log(email);
+  
   if (!email || !password) {
     //  check email and password exist
     return next(new AppError(' please proveide email and password ', 400));
   }
-  //   if (!password) {                                              //  check email and password exist
-  //     return next(new AppError(' please proveide password', 400));
-  //   }
+
   const user = await User.findOne({ email }).select('+password'); // select expiclity password
   console.log(user);
+  
   if (!user)
     return next(new AppError(`No User found against email ${email}`, 404));
   if (
@@ -103,7 +105,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (user.activated === false)
     return next(
       new AppError(
-        `Plz Activate your email by then Link sent to your email ${user.emil}`,
+        `Plz Activate your email by the Link sent to your email ${user.emil}`,
         401
       )
     );
@@ -111,6 +113,7 @@ exports.login = catchAsync(async (req, res, next) => {
   let profile = { ...user };
   
   console.log(`user`, user);
+
   if (user.role === 'customer') {
     profile = await Customer.findOne({
       userInfo: user._id,
@@ -130,6 +133,7 @@ exports.login = catchAsync(async (req, res, next) => {
   creatsendToken(profile, 200, res);
 });
 
+
 //  Protecting Routes
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -148,6 +152,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 2- validate the token
   const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // 3- check user exits
+  console.log(decode)
+
   const currentUser = await User.findById(decode.id);
   if (!currentUser) {
     return next(
