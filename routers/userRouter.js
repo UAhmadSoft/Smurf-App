@@ -14,6 +14,8 @@ router.route('/resetPassword/:resetToken').post(authController.resetPassword);
 
 router.use(protect); //  protect all router which are comming after this middleware
 
+router.patch('/updatePassword',authController.updatePassword);
+
 router
   .route('/')
   .get(userController.getAllUsers)
