@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     maxlength: [20, 'must be less than or equal to 20'],
-    minlength: [5, 'must be greater than 5'],
+    minlength: [3, 'must be greater than 3'],
   },
   email: {
     type: String,
@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!',
     },
   },
+  activationLink: {
+    type: String,
+  },
   socialLogins: [
     {
       type: String,
@@ -53,7 +56,7 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   activated: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
 
@@ -73,6 +76,21 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.methods.createAccountActivationLink = function () {
+  const activationToken = crypto.randomBytes(32).toString('hex');
+
+  // console.log(activationToken);
+
+  this.activationLink = crypto
+    .createHash('sha256')
+    .update(activationToken)
+    .digest('hex');
+
+  // console.log({ activationToken }, this.activationLink);
+
+  return activationToken;
+};
+
 // comparing password
 userSchema.methods.correctPassword = async function (
   candidate_Password,
@@ -80,6 +98,23 @@ userSchema.methods.correctPassword = async function (
 ) {
   console.log(candidate_Password);
   return await bcrypt.compare(candidate_Password, user_Password);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  console.log(resetToken);
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // console.log({ resetToken }, this.passwordResetToken);
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);
