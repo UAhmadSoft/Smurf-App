@@ -8,7 +8,6 @@ let DB_URL = DBCluster;
 DB_URL = DB_URL.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
 if (process.argv[2] && process.argv[2] === 'dblocal') DB_URL = DBLocal;
-console.log(`process.argv[2]`, process.argv[2]);
 
 console.log(`DB_URL`, DB_URL);
 

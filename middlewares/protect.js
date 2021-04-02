@@ -1,7 +1,8 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const { promisify } = require('util');
-
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 //  Protecting Routes
 module.exports = catchAsync(async (req, res, next) => {
   // 1- get the token check if exist
@@ -14,8 +15,9 @@ module.exports = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
   if (!token) {
-    return next(new AppErrorror(' you are not login ', 401));
+    return next(new AppError('you are not login ', 401));
   }
+  console.log(`process.env.JWT_SECRET`, process.env.JWT_SECRET);
   // 2- validate the token
   const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // 3- check user exits
@@ -26,7 +28,15 @@ module.exports = catchAsync(async (req, res, next) => {
     );
   }
 
+  let newUser;
+
+  // TODO
+  // if(currentUser.role ==='customer'){
+
+  // }
+
   // grant access to protected route
+  // req.user must be either tasker , customer , admin or a customer care
   req.user = currentUser;
   next();
 });
