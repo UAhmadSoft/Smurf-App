@@ -8,7 +8,7 @@ const Tasker = require('../models/Tasker');
 const sendMail = require('../utils/email');
 
 const signToken = (id) => {
-  return jwt.sign({ id }, 'abc-ooppqq-ok-secrete-key', {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     // payload + secret + expire time
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
@@ -16,7 +16,7 @@ const signToken = (id) => {
 
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
-  const token = signToken(user._id);
+  const token = signToken(user.userInfo._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -73,7 +73,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     url: activationURL,
   });
 
-  creatsendToken(newUser, 201, res);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+
+  // creatsendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -87,7 +94,7 @@ exports.login = catchAsync(async (req, res, next) => {
   //     return next(new AppError(' please proveide password', 400));
   //   }
   const user = await User.findOne({ email }).select('+password'); // select expiclity password
-  console.log(user);
+  // console.log(user);
   if (!user)
     return next(new AppError(`No User found against email ${email}`, 404));
   if (
@@ -107,7 +114,7 @@ exports.login = catchAsync(async (req, res, next) => {
     );
 
   let profile = { ...user };
-  console.log(`user`, user);
+  // console.log(`user`, user);
   if (user.role === 'customer') {
     profile = await Customer.findOne({
       userInfo: user._id,
@@ -122,7 +129,6 @@ exports.login = catchAsync(async (req, res, next) => {
       .exec();
   }
 
-  console.log(`profile`, profile);
   // if eveything is ok
   creatsendToken(profile, 200, res);
 });
