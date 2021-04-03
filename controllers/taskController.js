@@ -20,13 +20,7 @@ exports.getAllTasks = catchAsync(async (req, res, next) => {
  
  exports.createTask = catchAsync(async (req, res, next) => {
  
-    const newtask = await Task.create({
-        description:req.body.description,
-        price:req.body.price,
-        startAddress:req.body.startAddress,
-        vehiclesRequired:req.body.vehiclesRequired,
-        user:req.body.user
-    });
+    const newtask = await Task.create(req.body);
  
     res.status(200).json({
        status: 'success',

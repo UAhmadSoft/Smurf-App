@@ -2,17 +2,14 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const taskSchema = new mongoose.Schema({
+  images: [String],
   description: {
     type: String,
     required: [true, 'A Task Must have a Description'],
     minlength: [30, 'Description must be at least 30 characters'],
   },
   budget: Number,
-  startAddress: {
-    type: String,
-    required: [true, 'A Task Must have an Starting Address'],
-  },
-  endAddress: String,
+  Address: String,
   category: {
     type: mongoose.Schema.ObjectId,
     ref: 'Category',
@@ -23,13 +20,8 @@ const taskSchema = new mongoose.Schema({
       ref: 'SubCategory',
     },
   ],
-  images: [String],
   estimatedHours: Number,
-  vehiclesRequired: [String],
-  toolsRequired: [String],
   scheduleTime: Date,
-  startTime: Date,
-  endTime: Date,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -38,10 +30,12 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Customer',
   },
-  //   proposals: {
+    // bids: [
+  //    {
   //     type: mongoose.Schema.ObjectId,
-  //     ref: 'Proposal',
-  //   },
+  //     ref: 'Bid',
+  //   }
+  //  ]
 });
 
 taskSchema.pre(/^find/, function (next) {

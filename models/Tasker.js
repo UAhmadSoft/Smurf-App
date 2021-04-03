@@ -2,17 +2,19 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const taskerSchema = new mongoose.Schema({
-  aboutMe: {
+  bio: {
     type: String,
   },
   contactNo: {
     type: Number,
+    unique:true,
     // required: [true, 'Must have contactNo'],
-    maxlength: [11, 'must  equal to 11'],
+    // maxlength: [11, 'must  equal to 11'],
     minlength: [11, 'must  equal to 11'],
   },
   whatsAppNo: {
     type: Number,
+    uniqu:true,
     // required: [true, 'Must have contactNo'],
     maxlength: [11, 'must  equal to 11'],
     minlength: [11, 'must  equal to 11'],
@@ -33,7 +35,6 @@ const taskerSchema = new mongoose.Schema({
       ref: 'SubCategory',
     },
   ],
-  tools: [String],
   skills: [String],
   ratingsAverage: {
     type: Number,
@@ -55,19 +56,34 @@ const taskerSchema = new mongoose.Schema({
   dailyRate: Number,
   experience: {
     type: String,
-    enum: ['6 Months', '1 Year', , '3 years', '5+ Years', '10+ Years'],
+    enum: ['6-months', '1-Year', , '3-years', '5-Years', '10-Years'],
   },
   education: [
     {
-      type: String,
+      type: String
     },
   ],
-  certificated: [String],
-  cnic: String,
+  certificates: [
+    {
+      type:String
+    }
+  ],
+  cnic:{
+    type:Number,
+    unique:true,
+    maxlength: [13, 'must  equal to 13'],
+    minlength: [13, 'must  equal to 13'],
+  },
   cnicPic: String,
   isVerified: Boolean,
-  isSpended: Boolean,
-  isBlocked: Boolean,
+  isSpended:{
+    type:Boolean,
+    default:false,
+  },
+  isBlocked:{
+    type:Boolean,
+    default:false
+  },
 
   tasks: [{ type: mongoose.Schema.ObjectId, ref: 'Task' }],
 });
@@ -81,6 +97,7 @@ taskerSchema.pre(/^find/, function (next) {
 
   next();
 });
+
 
 const Tasker = mongoose.model('Tasker', taskerSchema);
 module.exports = Tasker;

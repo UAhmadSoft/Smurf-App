@@ -14,7 +14,7 @@ const signToken = (id) => {
   });
 };
 
-const getProfile = async (user) => {
+const getProfile =async (user) => {
   let profile;
   if (user.role === 'customer') {
     profile = await Customer.findOne({
@@ -91,6 +91,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     template: 'signupEmail.ejs',
     url: activationURL,
   });
+
   res.status(201).json({
     status: 'success',
     data: {
@@ -128,8 +129,10 @@ exports.login = catchAsync(async (req, res, next) => {
         401
       )
     );
-
-  const profile = getProfile(user);
+      
+  const profile =await getProfile(user);
+  
+  console.log(profile)
 
   // if eveything is ok
   creatsendToken(profile, 200, res);
@@ -268,8 +271,21 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
-  const profile = getProfile(user);
+  const profile =await getProfile(user);
 
   // 4) Log user in , send JWT
   creatsendToken(profile, 200, res);
 });
+
+exports.deactivateAccount= catchAsync(async (req, res, next) => {
+
+  const user=await User.findByIdAndUpdate(req.user.id,req.body,{new:true,runValidators:true});
+  console.log(user)
+
+  res.status(205).json({
+    status:"success",
+    user
+  })
+  
+
+})

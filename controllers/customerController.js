@@ -25,20 +25,6 @@ exports.getAllCustomers = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createCustomer = catchAsync(async (req, res, next) => {
-  const newcustomer = await Customer.create({
-    customerinfo: req.body.customerinfo,
-    address: req.body.address,
-    customer: req.body.customer,
-  });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      customer: newcustomer,
-    },
-  });
-});
 
 exports.updateProfile = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
@@ -54,17 +40,10 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
   // 2) Filtered out unwanted fields names that are not allowed to be updated
 
   // 3) Update user document
-  const updatedUser1 = await Customer.findById(req.params.id);
-  console.log(`updatedUser1`, updatedUser1);
+  // const updatedUser1 = await Customer.findById(req.params.id);
+  // console.log(`updatedUser1`, updatedUser1);
 
-  const updatedUser = await Customer.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const updatedUser = await Customer.findByIdAndUpdate(req.params.id,req.body,{new: true,runValidators: true,});
 
   if (!updatedUser)
     return next(new AppError(`Error updating User's Profile`, 500));

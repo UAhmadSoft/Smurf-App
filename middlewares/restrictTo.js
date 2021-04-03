@@ -1,3 +1,5 @@
+const AppError = require('../utils/appError');
+
 // apply restricting to specific members
 module.exports = (...role) => {
   //  roles is an array like ['admin','lead-guide'] using res-parameter syntax

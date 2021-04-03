@@ -9,13 +9,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(taskerController.getAllTaskers)
-  .post(protect, restrictTo('tasker'), taskerController.createTasker);
-
+  .get(taskerController.getAllTaskers);
+  
 router.use('/:taskerId/reviews', reviewRouter);
 
-router.route('/:id').get(taskerController.getTasker);
-// .patch(taskerController.updateTasker)
-// .delete(taskerController.deleteTasker);
+router.route('/:id')
+  .get(taskerController.getTasker)
+  .patch(protect, restrictTo('tasker'), taskerController.updateProfile);
+
 
 module.exports = router;

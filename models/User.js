@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['customer', 'tasker', 'admin'],
-    default: 'customer',
+    required:[true,"must choose one role Tasker OR Customer"]
   },
   password: {
     type: String,
@@ -58,6 +58,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  active:{
+    type: Boolean,
+    default: true,
+    select: false,
+}
 });
 
 // userSchema.pre(/^find/, function (next) {
@@ -75,6 +80,15 @@ userSchema.pre('save', async function (next) {
   next();
 
 });
+
+// Query Middleware  not show the deactivate users
+userSchema.pre(/^find/, function (next) {
+  // points to current query 
+  this.find({active:{$ne:false}})
+  next()
+  
+})
+
 
 userSchema.methods.createAccountActivationLink = function () {
 

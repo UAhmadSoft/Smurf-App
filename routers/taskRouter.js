@@ -10,9 +10,9 @@ router
   .get(taskController.getAllTasks)
   .post(protect, restrictTo('customer'), taskController.createTask);
 
-// router
-// .route('/:id')
-// .get(taskController.getTask)
+router
+  .route('/:id')
+  .get(taskController.getTask)
 // .patch(taskController.updateTaske)
 // .delete(taskController.deleteTaske);
 
