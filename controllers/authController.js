@@ -14,6 +14,25 @@ const signToken = (id) => {
   });
 };
 
+const getProfile = async (user) => {
+  let profile;
+  if (user.role === 'customer') {
+    profile = await Customer.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  } else if (user.role === 'tasker') {
+    profile = await Tasker.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  }
+
+  return profile;
+};
+
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
   const token = signToken(user.userInfo._id);
@@ -110,21 +129,7 @@ exports.login = catchAsync(async (req, res, next) => {
       )
     );
 
-  let profile = { ...user };
-
-  if (user.role === 'customer') {
-    profile = await Customer.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  } else if (user.role === 'tasker') {
-    profile = await Tasker.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  }
+  const profile = getProfile(user);
 
   // if eveything is ok
   creatsendToken(profile, 200, res);
@@ -263,6 +268,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
+  const profile = getProfile(user);
+
   // 4) Log user in , send JWT
-  creatsendToken(user, 200, res);
+  creatsendToken(profile, 200, res);
 });
