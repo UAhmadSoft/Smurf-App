@@ -33,7 +33,7 @@ const getProfile = async (user) => {
   return profile;
 };
 
-// cookie a small piece of text that a server sends to
+// cookie a small piece of text that a server sends to.
 const creatsendToken = (user, statusCode, res) => {
   const token = signToken(user.userInfo._id);
   const cookieOptions = {
