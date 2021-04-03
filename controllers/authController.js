@@ -7,6 +7,7 @@ const Customer = require('../models/Customer');
 const Tasker = require('../models/Tasker');
 const sendMail = require('../utils/email');
 
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     // payload + secret + expire time
@@ -14,13 +15,32 @@ const signToken = (id) => {
   });
 };
 
+const getProfile = (user) => {
+  let profile;
+  if (user.role === 'customer') {
+    profile = await Customer.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  } else if (user.role === 'tasker') {
+    profile = await Tasker.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  }
+
+  return profile
+}
+
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
   const token = signToken(user.userInfo._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ), // converting to milisec
+      ), // converting to milisec
     httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
@@ -110,21 +130,7 @@ exports.login = catchAsync(async (req, res, next) => {
       )
     );
 
-  let profile = { ...user };
-
-  if (user.role === 'customer') {
-    profile = await Customer.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  } else if (user.role === 'tasker') {
-    profile = await Tasker.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  }
+  const profile = getProfile(user)
 
   // if eveything is ok
   creatsendToken(profile, 200, res);
@@ -263,6 +269,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
+  const profile = getProfile(user)
+
   // 4) Log user in , send JWT
-  creatsendToken(user, 200, res);
+  creatsendToken(profile, 200, res);
 });
