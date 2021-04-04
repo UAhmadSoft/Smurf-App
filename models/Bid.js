@@ -15,7 +15,7 @@ const bidSchema = new mongoose.Schema({
     budget:{
         type:String
     },
-    time:{
+    created_at:{
         type:Date,
         default:Date.now
     },
@@ -25,6 +25,8 @@ const bidSchema = new mongoose.Schema({
     }
     
 })
+
+
 
 
 const Bid = mongoose.model('Bid', bidSchema);

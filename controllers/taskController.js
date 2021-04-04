@@ -15,6 +15,7 @@ exports.getAllTasks = catchAsync(async (req, res, next) => {
         tasks,
        },
     });
+
  
  });
  
@@ -24,9 +25,6 @@ exports.getAllTasks = catchAsync(async (req, res, next) => {
     req.user.tasks.unshift(newtask._id);  // add task to customer tasks[_id]
 
     await req.user.save({runValidators:true});
-
-    console.log(newtask)
-    console.log(req.user)
 
     res.status(200).json({
        status: 'success',
