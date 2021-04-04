@@ -9,7 +9,7 @@ const taskerSchema = new mongoose.Schema({
     type: Number,
     unique:true,
     // required: [true, 'Must have contactNo'],
-    // maxlength: [11, 'must  equal to 11'],
+    maxlength: [11, 'must  equal to 11'],
     minlength: [11, 'must  equal to 11'],
   },
   whatsAppNo: {

@@ -3,7 +3,30 @@ const catchAsync = require('../utils/catchAsync');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Customer=require('../models/Customer')
+const Tasker=require('../models/Tasker')
+
 //  Protecting Routes
+
+const getProfile =async (user) => {
+  let profile;
+  if (user.role === 'customer') {
+    profile = await Customer.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  } else if (user.role === 'tasker') {
+    profile = await Tasker.findOne({
+      userInfo: user._id,
+    })
+      .populate('userInfo')
+      .exec();
+  }
+  return profile;
+
+};
+
 module.exports = catchAsync(async (req, res, next) => {
   // 1- get the token check if exist
   //   const token=req.header('Authorization').replace('Bearer ','')
@@ -28,15 +51,11 @@ module.exports = catchAsync(async (req, res, next) => {
     );
   }
 
-  let newUser;
-
-  // TODO
-  // if(currentUser.role ==='customer'){
-
-  // }
+  let newUser=await getProfile(currentUser);
 
   // grant access to protected route
   // req.user must be either tasker , customer , admin or a customer care
-  req.user = currentUser;
+  req.user = newUser;
   next();
+  
 });

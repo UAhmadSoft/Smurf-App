@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv').config({ path: './config.env' });
 const colors = require('colors');
 const DBConnect = require('./utils/dbConnect');
-// process.on('uncaughtException', (error) => {
-//     // using uncaughtException event
-//     console.log(' uncaught Exception => shutting down..... ');
-//     console.log(error.name, error.message);
-//     process.exit(1); //  emidiatly exists all from all the requests
-// });
+
+process.on('uncaughtException', (error) => {
+    // using uncaughtException event
+    console.log(' uncaught Exception => shutting down..... ');
+    console.log(error.name, error.message);
+    process.exit(1); //  emidiatly exists all from all the requests
+});
 
 const app = require('./app');
 
