@@ -13,7 +13,7 @@ router
 router
   .route('/:id')
   .get(taskController.getTask)
-// .patch(taskController.updateTaske)
-// .delete(taskController.deleteTaske);
+  .patch(taskController.updateTask)
+  .delete(protect,restrictTo('customer'),taskController.deleteTask);
 
 module.exports = router;

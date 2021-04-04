@@ -30,12 +30,13 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Customer',
   },
-    // bids: [
+  // bids: [
   //    {
   //     type: mongoose.Schema.ObjectId,
   //     ref: 'Bid',
   //   }
   //  ]
+
 });
 
 taskSchema.pre(/^find/, function (next) {
