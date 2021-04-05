@@ -57,12 +57,12 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
  });
 
 exports.getTasker = catchAsync(async (req, res, next) => {
-   const tasker = await Tasker.findById(req.params.id);
+   const tasker = await Tasker.findById(req.params.id).populate('reviews');
 
    if (!tasker)
       return res.status(404).json({
          status: 'failed',
-         message: `No User found against id ${req.params.id}`,
+         message: `No tasker found against id ${req.params.id}`,
       });
 
    res.status(200).json({

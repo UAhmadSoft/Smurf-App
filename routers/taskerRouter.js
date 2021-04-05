@@ -11,7 +11,7 @@ router
   .route('/')
   .get(taskerController.getAllTaskers);
   
-router.use('/:taskerId/reviews', reviewRouter);
+router.use('/:taskerId/reviews', reviewRouter);         //  nested routes 
 
 router.route('/:id')
   .get(taskerController.getTasker)

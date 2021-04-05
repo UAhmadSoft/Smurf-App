@@ -16,4 +16,8 @@ router
   .patch(protect,restrictTo('customer'),taskController.updateTask)
   .delete(protect,restrictTo('customer'),taskController.deleteTask);
 
+// router
+//   .route('/:id/bid')
+//   .post(taskController.createBid)
+
 module.exports = router;

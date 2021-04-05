@@ -132,7 +132,7 @@ exports.login = catchAsync(async (req, res, next) => {
       
   const profile =await getProfile(user);
   
-  console.log(profile)
+  // console.log(profile)
 
   // if eveything is ok
   creatsendToken(profile, 200, res);
