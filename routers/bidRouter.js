@@ -3,12 +3,8 @@ const bidController = require('../controllers/bidController');
 const protect = require('../middlewares/protect');
 const restrictTo = require('../middlewares/restrictTo');
 
+const router = express.Router({ mergeParams: true });
 
-const router = express.Router();
-
-router
-    .route('/')
-    .post(protect,restrictTo('tasker'),bidController.createBid)
-
+router.route('/').post(protect, restrictTo('tasker'), bidController.createBid);
 
 module.exports = router;
