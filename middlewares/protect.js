@@ -55,8 +55,8 @@ module.exports = catchAsync(async (req, res, next) => {
 
   let newUser;
 
-  if (newUser.role === 'admin' || newUser.role === 'customer care')
-    newUser = newUser;
+  if (currentUser.role === 'admin' || currentUser.role === 'customer care')
+    newUser = currentUser;
   else newUser = await getProfile(currentUser);
 
   // console.log(" new user ",newUser)
