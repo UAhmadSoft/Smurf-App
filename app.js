@@ -15,6 +15,7 @@ const customerRouter = require('./routers/customerRouter');
 const taskRouter = require('./routers/taskRouter');
 const reviewRouter = require('./routers/reviewRouter');
 const bidRouter = require('./routers/bidRouter');
+const categoryRouter = require('./routers/subCategoryRouter');
 
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 
@@ -68,6 +69,7 @@ app.use('/api/v1/tasker', taskerRouter);
 app.use('/api/v1/customer', customerRouter);
 app.use('/api/v1/task', taskRouter);
 app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/category', categoryRouter);
 
 // ! Bids will be accessed from /task/tasdId/bid route in task router
 // app.use('api/v1/bid',bidRouter);
