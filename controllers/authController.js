@@ -7,7 +7,8 @@ const Customer = require('../models/Customer');
 const Tasker = require('../models/Tasker');
 const sendMail = require('../utils/email');
 
-const signToken = (id) => {
+const signToken = (user) => {
+  const id = (user.userInfo && user.userInfo._id) || user._id;
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     // payload + secret + expire time
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -35,7 +36,7 @@ const getProfile = async (user) => {
 
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
-  const token = signToken(user.userInfo._id);
+  const token = signToken(user);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -126,7 +127,12 @@ exports.login = catchAsync(async (req, res, next) => {
       )
     );
 
-  const profile = await getProfile(user);
+  let profile;
+
+  console.log(`user.role`, user.role);
+
+  if (user.role === 'admin' || user.role === 'customer care') profile = user;
+  else profile = await getProfile(user);
 
   // console.log(profile)
 
