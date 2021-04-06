@@ -26,7 +26,7 @@ router.patch(
 );
 
 router.patch(
-  '/:taskid/taskerId/hire',
+  '/:taskId/:taskerId/hire',
   protect,
   restrictTo('customer'),
   taskController.hireTasker
