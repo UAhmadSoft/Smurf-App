@@ -86,7 +86,19 @@ const taskerSchema = new mongoose.Schema({
   },
 
   tasks: [{ type: mongoose.Schema.ObjectId, ref: 'Task' }],
+},{
+    toJSON: { virtuals: true },     // make virtual part of the output
+    toObject: { virtuals: true },   
+}
+);
+
+// virtual populate => it shows the review which are belong to a particular tasker
+taskerSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tasker',     //  reference of the current modal
+  localField: '_id',          //  current modal id 
 });
+
 
 taskerSchema.pre(/^find/, function (next) {
   // this points to current query
@@ -97,6 +109,7 @@ taskerSchema.pre(/^find/, function (next) {
 
   next();
 });
+
 
 
 const Tasker = mongoose.model('Tasker', taskerSchema);

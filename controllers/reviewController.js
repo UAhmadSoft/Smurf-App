@@ -7,8 +7,11 @@ const Review=require('../models/Review');
 const { Mongoose } = require('mongoose');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
+
    let reviews;
    const { taskerId } = req.params;
+
+   console.log(taskerId)
 
    if (taskerId)
       reviews = await Review.find({
@@ -23,29 +26,8 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
          reviews,
       },
    });
+
 });
-
-exports.getReview = catchAsync(async (req, res, next) => {
-    const reviews = await Review.findById(req.params.id);
-    
-    console.log(reviews)
-    if (!reviews)
-       return res.status(404).json({
-          status: 'failed',
-          message: `No review found against id ${req.params.id}`,
-       });
-
-    // SEND RESPONSE
-    res.status(200).json({
-       status: 'success',
-       results: reviews.length,
-       data: {
-        reviews,
-       },
-    });
- 
-});
-
 
 exports.getReview = catchAsync(async (req, res, next) => {
    const reviews = await Review.findById(req.params.id);
@@ -68,15 +50,19 @@ exports.getReview = catchAsync(async (req, res, next) => {
 exports.createReview = catchAsync(async (req, res, next) => {
    let newReview;
 
-   const { taskerId } = req.params;
+   // if(!req.body.tasker) req.body.tasker=req.params.taskerId 
+   // if(!req.body.tasker) req.body.customer=req.params.customerId
+    
+   console.log(req.params)
 
+   const { taskerId } = req.params; 
    if (taskerId)
       newReview = await Review.create({
          review: req.body.review,
          rating: req.body.rating,
          customer: req.body.customer,
          tasker: taskerId,
-      });
+      });   
    else
       newReview = await Review.create({
          review: req.body.review,
@@ -95,4 +81,5 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 exports.getTaskerReviews=catchAsync(async (req, res, next) => {  
    const taskerReview=await Tasker.findById({reviews:req.params})
+
 })

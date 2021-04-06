@@ -40,10 +40,11 @@ module.exports = catchAsync(async (req, res, next) => {
   if (!token) {
     return next(new AppError('you are not login ', 401));
   }
-  console.log(`process.env.JWT_SECRET`, process.env.JWT_SECRET);
+  // console.log(`process.env.JWT_SECRET`, process.env.JWT_SECRET);
   // 2- validate the token
   const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // 3- check user exits
+  // console.log(decode)
   const currentUser = await User.findById(decode.id);
   if (!currentUser) {
     return next(
@@ -51,7 +52,11 @@ module.exports = catchAsync(async (req, res, next) => {
     );
   }
 
+  // console.log(currentUser)
+
   let newUser=await getProfile(currentUser);
+
+  // console.log(" new user ",newUser)
 
   // grant access to protected route
   // req.user must be either tasker , customer , admin or a customer care
