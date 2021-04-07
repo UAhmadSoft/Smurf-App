@@ -33,18 +33,11 @@ const reviewSchema = new mongoose.Schema({
 })
 
 reviewSchema.pre(/^find/, function (next) {
-    // this points to current query
-    // this.populate({
-    //   path: 'tasker',
-    // }).populate({
-    //     path:'customer'
-    // })
-
     this.populate({
-        path:'customer'
+        path:'customer',
+        select:'userInfo'
     })
     next();
-    
 });
 
 const Review = mongoose.model('Review', reviewSchema);

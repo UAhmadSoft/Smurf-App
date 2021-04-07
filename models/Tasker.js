@@ -90,6 +90,7 @@ const taskerSchema = new mongoose.Schema({
     toJSON: { virtuals: true },     // make virtual part of the output
     toObject: { virtuals: true },   
 }
+
 );
 
 // virtual populate => it shows the review which are belong to a particular tasker

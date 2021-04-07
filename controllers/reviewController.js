@@ -26,6 +26,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
          reviews,
       },
    });
+   
 
 });
 
@@ -51,24 +52,24 @@ exports.createReview = catchAsync(async (req, res, next) => {
    let newReview;
 
    // if(!req.body.tasker) req.body.tasker=req.params.taskerId 
-   // if(!req.body.tasker) req.body.customer=req.params.customerId
+   // if(!req.body.customer) req.body.customer=req.user._id
     
-   console.log(req.params)
+   console.log(req.user)
 
    const { taskerId } = req.params; 
    if (taskerId)
       newReview = await Review.create({
          review: req.body.review,
          rating: req.body.rating,
-         customer: req.body.customer,
+         customer: req.user._id,
          tasker: taskerId,
       });   
    else
       newReview = await Review.create({
          review: req.body.review,
          rating: req.body.rating,
-         customer: req.body.customer,
-         tasker: req.body.tasker,
+         customer: req.user._id,
+         tasker: req.params.tasker,
       });
 
    res.status(200).json({
@@ -79,7 +80,3 @@ exports.createReview = catchAsync(async (req, res, next) => {
    });
 });
 
-exports.getTaskerReviews=catchAsync(async (req, res, next) => {  
-   const taskerReview=await Tasker.findById({reviews:req.params})
-
-})

@@ -57,7 +57,7 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
  });
 
 exports.getTasker = catchAsync(async (req, res, next) => {
-   const tasker = await Tasker.findById(req.params.id).populate('reviews');
+   const tasker = await Tasker.findById(req.params.id).populate('reviews')
 
    if (!tasker)
       return res.status(404).json({
