@@ -7,14 +7,15 @@ const Customer = require('../models/Customer');
 const Tasker = require('../models/Tasker');
 const sendMail = require('../utils/email');
 
-const signToken = (id) => {
+const signToken = (user) => {
+  const id = (user.userInfo && user.userInfo._id) || user._id;
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     // payload + secret + expire time
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-const getProfile =async (user) => {
+const getProfile = async (user) => {
   let profile;
   if (user.role === 'customer') {
     profile = await Customer.findOne({
@@ -35,7 +36,7 @@ const getProfile =async (user) => {
 
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
-  const token = signToken(user.userInfo._id);
+  const token = signToken(user);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -50,9 +51,7 @@ const creatsendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: {
-      user,
-    },
+    user,
   });
 };
 
@@ -94,9 +93,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      user,
-    },
+    user,
   });
   // creatsendToken(newUser, 201, res);
 });
@@ -129,9 +126,14 @@ exports.login = catchAsync(async (req, res, next) => {
         401
       )
     );
-      
-  const profile =await getProfile(user);
-  
+
+  let profile;
+
+  console.log(`user.role`, user.role);
+
+  if (user.role === 'admin' || user.role === 'customer care') profile = user;
+  else profile = await getProfile(user);
+
   // console.log(profile)
 
   // if eveything is ok
@@ -271,21 +273,21 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
-  const profile =await getProfile(user);
+  const profile = await getProfile(user);
 
   // 4) Log user in , send JWT
   creatsendToken(profile, 200, res);
 });
 
-exports.deactivateAccount= catchAsync(async (req, res, next) => {
-
-  const user=await User.findByIdAndUpdate(req.user.id,req.body,{new:true,runValidators:true});
-  console.log(user)
+exports.deactivateAccount = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  console.log(user);
 
   res.status(205).json({
-    status:"success",
-    user
-  })
-  
-
-})
+    status: 'success',
+    user,
+  });
+});

@@ -14,18 +14,18 @@ router.route('/resetPassword/:resetToken').post(authController.resetPassword);
 
 //router.use(protect); //  protect all router which are comming after this middleware
 
-router.patch('/updatePassword',protect,authController.updatePassword);
-router.patch('/deactivateAccount',protect,authController.deactivateAccount);
+router.patch('/updatePassword', protect, authController.updatePassword);
+router.patch('/deactivateAccount', protect, authController.deactivateAccount);
 
 router
   .route('/')
-  .get(userController.getAllUsers)
-  .post(protect,userController.createUser);
+  .get(protect, userController.getAllUsers)
+  .post(protect, userController.createUser);
 
 router
   .route('/:id')
   .get(userController.getUser)
-  .patch(protect,userController.updateUser)
-  .delete(protect,userController.deleteUser);
+  .patch(protect, userController.updateUser)
+  .delete(protect, userController.deleteUser);
 
 module.exports = router;

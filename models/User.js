@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['customer', 'tasker', 'admin'],
-    required:[true,"must choose one role Tasker OR Customer"]
+    required: [true, 'must choose one role Tasker OR Customer'],
   },
   password: {
     type: String,
@@ -56,13 +56,13 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   activated: {
     type: Boolean,
-    default: false,
+    default: true,
   },
-  active:{
+  active: {
     type: Boolean,
     default: true,
     select: false,
-  }
+  },
 });
 
 // userSchema.pre(/^find/, function (next) {
@@ -78,20 +78,16 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12); // hashing password
   this.passwordConfirm = undefined; // delete passwordConfirm field
   next();
-
 });
 
 // Query Middleware  not show the deactivate users
 userSchema.pre(/^find/, function (next) {
-  // points to current query 
-  this.find({active:{$ne:false}})
-  next()
-  
-})
-
+  // points to current query
+  this.find({ active: { $ne: false } });
+  next();
+});
 
 userSchema.methods.createAccountActivationLink = function () {
-
   const activationToken = crypto.randomBytes(32).toString('hex');
   // console.log(activationToken);
   this.activationLink = crypto
@@ -100,17 +96,18 @@ userSchema.methods.createAccountActivationLink = function () {
     .digest('hex');
   // console.log({ activationToken }, this.activationLink);
   return activationToken;
-
 };
 
 // comparing password
-userSchema.methods.correctPassword = async function (candidate_Password,user_Password) {
+userSchema.methods.correctPassword = async function (
+  candidate_Password,
+  user_Password
+) {
   console.log(candidate_Password);
   return await bcrypt.compare(candidate_Password, user_Password);
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   console.log(resetToken);
@@ -123,9 +120,7 @@ userSchema.methods.createPasswordResetToken = function () {
   // console.log({ resetToken }, this.passwordResetToken);
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
-  
 };
-
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

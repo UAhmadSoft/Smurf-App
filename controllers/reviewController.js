@@ -1,13 +1,12 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const Task=require('../models/Task');
-const Tasker=require('../models/Tasker');
-const Review=require('../models/Review');
+const Task = require('../models/Task');
+const Tasker = require('../models/Tasker');
+const Review = require('../models/Review');
 
 const { Mongoose } = require('mongoose');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-
    let reviews;
    const { taskerId } = req.params;
 
@@ -22,36 +21,31 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
    res.status(200).json({
       status: 'success',
       results: reviews.length,
-      data: {
-         reviews,
-      },
+      reviews
    });
    
-
 });
 
 exports.getReview = catchAsync(async (req, res, next) => {
-   const reviews = await Review.findById(req.params.id);
+  const reviews = await Review.findById(req.params.id);
 
-   if (!reviews)
-      return res.status(404).json({
-         status: 'failed',
-         message: `No review found against id ${req.params.id}`,
-      });
-   // SEND RESPONSE
-   res.status(200).json({
-      status: 'success',
-      results: reviews.length,
-      data: {
-         reviews,
-      },
-   });
+  if (!reviews)
+    return res.status(404).json({
+      status: 'failed',
+      message: `No review found against id ${req.params.id}`,
+    });
+  // SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: reviews.length,
+    reviews,
+  });
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
-   let newReview;
+  let newReview;
 
-   // if(!req.body.tasker) req.body.tasker=req.params.taskerId 
+  // if(!req.body.tasker) req.body.tasker=req.params.taskerId 
    // if(!req.body.customer) req.body.customer=req.user._id
     
    console.log(req.user)
@@ -72,11 +66,9 @@ exports.createReview = catchAsync(async (req, res, next) => {
          tasker: req.params.tasker,
       });
 
-   res.status(200).json({
-      status: 'success',
-      data: {
-         review: newReview,
-      },
-   });
+  res.status(200).json({
+    status: 'success',
+    review: newReview,
+  });
+  
 });
-
