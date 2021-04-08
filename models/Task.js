@@ -13,7 +13,7 @@ const taskSchema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.ObjectId,
     ref: 'Category',
-  },
+  }, 
   subCategories: [
     {
       type: mongoose.Schema.ObjectId,

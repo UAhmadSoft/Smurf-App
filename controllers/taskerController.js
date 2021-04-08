@@ -13,7 +13,7 @@ const { Mongoose } = require('mongoose');
 // };
 
 exports.getAllTaskers = catchAsync(async (req, res, next) => {
-  const tasker = await Tasker.find();
+  const tasker = await Tasker.find()
 
   // SEND RESPONSE
   res.status(200).json({
@@ -21,6 +21,7 @@ exports.getAllTaskers = catchAsync(async (req, res, next) => {
     results: tasker.length,
     tasker,
   });
+
 });
 
 exports.updateProfile = catchAsync(async (req, res, next) => {

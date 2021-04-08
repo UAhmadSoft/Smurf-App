@@ -36,9 +36,6 @@ exports.createTask = catchAsync(async (req, res, next) => {
 exports.getTask = catchAsync(async (req, res, next) => {
   const task = await Task.findById(req.params.id);
 
-  console.log(task);
-  console.log(req.user);
-
   if (!task) {
     return next(new AppError(`No Task found against id ${req.params.id}`, 404));
   }
