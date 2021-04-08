@@ -5,6 +5,8 @@ const restrictTo = require('../middlewares/restrictTo');
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').post(protect, restrictTo('tasker'), bidController.createBid);
+router
+  .route('/')
+  .post(protect, restrictTo('tasker'), bidController.createBid);
 
 module.exports = router;

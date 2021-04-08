@@ -24,7 +24,9 @@ const bidSchema = new mongoose.Schema({
     ref: 'Task',
     required: [true, 'Must belong to a Task'],
   },
+  
 });
+
 
 const Bid = mongoose.model('Bid', bidSchema);
 module.exports = Bid;

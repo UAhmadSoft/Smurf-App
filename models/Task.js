@@ -40,6 +40,7 @@ const taskSchema = new mongoose.Schema({
       ref: 'Bid',
     },
   ],
+
 });
 
 taskSchema.pre(/^find/, function (next) {
@@ -49,8 +50,8 @@ taskSchema.pre(/^find/, function (next) {
   }).populate({
     path: 'bids',
   });
-
   next();
+
 });
 
 const Task = mongoose.model('Task', taskSchema);

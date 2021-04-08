@@ -18,24 +18,10 @@ router
   .patch(protect, restrictTo('customer'), taskController.updateTask)
   .delete(protect, restrictTo('customer'), taskController.deleteTask);
 
-router.patch(
-  '/:id/finish',
-  protect,
-  restrictTo('customer'),
-  taskController.finishTask
-);
+router.patch('/:id/finish',protect,restrictTo('customer'),taskController.finishTask);
 
-router.patch(
-  '/:taskId/:taskerId/hire',
-  protect,
-  restrictTo('customer'),
-  taskController.hireTasker
-);
+router.patch('/:taskId/:taskerId/hire',protect,restrictTo('customer'),taskController.hireTasker);
 
-router.use('/:taskId/bid', bidRouter);
-
-// router
-//   .route('/:id/bid')
-//   .post(taskController.createBid)
+router.use('/:taskId/bid', bidRouter);  // nested route
 
 module.exports = router;
