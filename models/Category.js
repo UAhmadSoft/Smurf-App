@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const subCategorySchema = new mongoose.Schema({
-  
-  title: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-
-});
-
-const SubCategory = mongoose.model('SubCategory', subCategorySchema);
-
 const categorySchema = new mongoose.Schema({
   title: {
     type: String,

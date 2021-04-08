@@ -90,6 +90,7 @@ const taskerSchema = new mongoose.Schema({
     toJSON: { virtuals: true },     // make virtual part of the output
     toObject: { virtuals: true },   
 }
+
 );
 
 // virtual populate => it shows the review which are belong to a particular tasker
@@ -97,6 +98,7 @@ taskerSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tasker',     //  reference of the current modal
   localField: '_id',          //  current modal id 
+  
 });
 
 

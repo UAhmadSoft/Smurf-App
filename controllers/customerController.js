@@ -19,12 +19,9 @@ exports.getAllCustomers = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: customers.length,
-    data: {
-      customers,
-    },
+    customers,
   });
 });
-
 
 exports.updateProfile = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
@@ -43,16 +40,18 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
   // const updatedUser1 = await Customer.findById(req.params.id);
   // console.log(`updatedUser1`, updatedUser1);
 
-  const updatedUser = await Customer.findByIdAndUpdate(req.params.id,req.body,{new: true,runValidators: true,});
+  const updatedUser = await Customer.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true, runValidators: true }
+  );
 
   if (!updatedUser)
     return next(new AppError(`Error updating User's Profile`, 500));
 
   res.status(200).json({
     status: 'success',
-    data: {
-      user: updatedUser,
-    },
+    user: updatedUser,
   });
 });
 
@@ -67,9 +66,7 @@ exports.getCustomer = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      customer,
-    },
+    customer,
   });
 });
 

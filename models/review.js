@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Tasker = require('./Tasker');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -34,19 +35,54 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function (next) {
-  // this points to current query
-  // this.populate({
-  //   path: 'tasker',
-  // }).populate({
-  //     path:'customer'
-  // })
+//  each user can review each tasker only once so applying restriction
+//  and means each combination of tasker and customer always unique
+reviewSchema.index({ tasker: 1, customer: 1 }, { unique: true });
 
+reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'customer',
+    select: 'userInfo',
   });
   next();
 });
 
+reviewSchema.statics.cal_averageRatings = async function (taskerId) {
+  // id for which the current review belong to
+  // using aregation pipeline
+  const stats = await this.aggregate([
+    {
+      $match: { tasker: taskerId },
+    },
+    {
+      $group: {
+        _id: '$tasker', // group by tasker  tasker field is defiend in current doc
+        nRating: { $sum: 1 }, // add one for each rating e.g  5 review/ratings =  5 no of review/ratings
+        avgRating: { $avg: '$rating' }, //  no of the field in current doc
+      },
+    },
+  ]);
+
+  console.log(stats);
+
+  if (stats.length > 0) {
+    await Tasker.findByIdAndUpdate(taskerId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tasker.findByIdAndUpdate(taskerId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
+};
+
+//  each time new review is created calculate/update the nRating,avdRating
+reviewSchema.post('save', function () {
+  this.constructor.cal_averageRatings(this.tasker);
+});
+
 const Review = mongoose.model('Review', reviewSchema);
+
 module.exports = Review;

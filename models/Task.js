@@ -13,42 +13,45 @@ const taskSchema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.ObjectId,
     ref: 'Category',
-  },
+  }, 
   subCategories: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'SubCategory',
     },
-  ],   
+  ],
   estimatedHours: Number,
   scheduleTime: Date,
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  user: {
+  customer: {
     type: mongoose.Schema.ObjectId,
     ref: 'Customer',
   },
-  // bids: [
-  //    {
-  //     type: mongoose.Schema.ObjectId,
-  //     ref: 'Bid',
-  //   }
-  //  ]
+  tasker: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Tasker',
+  },
+  bids: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Bid',
+    },
+  ],
 
 });
 
 taskSchema.pre(/^find/, function (next) {
   // this points to current query
   this.populate({
-    path: 'user',
-  })
-  // .populate({
-  //   path:'bids'
-  // });
-  
+    path: 'customer',
+  }).populate({
+    path: 'bids',
+  });
   next();
+
 });
 
 const Task = mongoose.model('Task', taskSchema);
