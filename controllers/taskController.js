@@ -6,7 +6,7 @@ const Bid = require('../models/Bid');
 const Tasker = require('../models/Tasker');
 
 exports.getAllTasks = catchAsync(async (req, res, next) => {
-  const tasks = await Task.find().populate({path:'bids',select:'_id'});
+  const tasks = await Task.find();
 
   // SEND RESPONSE
   res.status(200).json({

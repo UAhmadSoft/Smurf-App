@@ -4,7 +4,6 @@ const protect = require('../middlewares/protect');
 const restrictTo = require('../middlewares/restrictTo');
 
 const bidRouter = require('./bidRouter');
-
 const router = express.Router({ mergeParams: true });
 
 router
