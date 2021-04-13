@@ -85,7 +85,8 @@ const taskerSchema = new mongoose.Schema({
     default:false
   },
 
-  tasks: [{ type: mongoose.Schema.ObjectId, ref: 'Task' }],
+  tasks: [{ type: mongoose.Schema.ObjectId, ref: 'Task' }],   // working tasks/done tasks 
+
 },{
     toJSON: { virtuals: true },     // make virtual part of the output
     toObject: { virtuals: true },   

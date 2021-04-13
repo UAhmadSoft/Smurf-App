@@ -44,7 +44,6 @@ const creatsendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
   res.cookie('jwt', token, cookieOptions);
   // Remove the password from output
   user.password = undefined;
@@ -53,6 +52,7 @@ const creatsendToken = (user, statusCode, res) => {
     token,
     user,
   });
+
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -96,6 +96,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     user,
   });
   // creatsendToken(newUser, 201, res);
+  
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -128,16 +129,14 @@ exports.login = catchAsync(async (req, res, next) => {
     );
 
   let profile;
-
   console.log(`user.role`, user.role);
 
   if (user.role === 'admin' || user.role === 'customer care') profile = user;
   else profile = await getProfile(user);
-
   // console.log(profile)
-
   // if eveything is ok
   creatsendToken(profile, 200, res);
+
 });
 
 exports.confirmMail = catchAsync(async (req, res) => {

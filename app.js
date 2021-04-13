@@ -70,9 +70,9 @@ app.use('/api/v1/customer', customerRouter);
 app.use('/api/v1/task', taskRouter);
 app.use('/api/v1/review', reviewRouter);
 app.use('/api/v1/category', categoryRouter);
+//app.use('/api/v1/gig',gigRouter)
+// app.use('/api/v1/admin',adminRouter);
 
-// ! Bids will be accessed from /task/tasdId/bid route in task router
-// app.use('api/v1/bid',bidRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {

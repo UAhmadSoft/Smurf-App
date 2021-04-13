@@ -1,5 +1,4 @@
 const express = require('express');
-
 const categoryController = require('../controllers/categoryController');
 const protect = require('../middlewares/protect');
 const restrictTo = require('../middlewares/restrictTo');
@@ -7,7 +6,6 @@ const restrictTo = require('../middlewares/restrictTo');
 const router = express.Router();
 
 router.route('/').get(categoryController.getAllCategories);
-
 router.route('/:').get(categoryController.getCategoryById);
 
 router.use(protect);

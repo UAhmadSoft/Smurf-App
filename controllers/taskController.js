@@ -4,9 +4,15 @@ const Task = require('../models/Task');
 const { Mongoose } = require('mongoose');
 const Bid = require('../models/Bid');
 const Tasker = require('../models/Tasker');
+const sendMail = require('../utils/email');
+
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken); 
 
 exports.getAllTasks = catchAsync(async (req, res, next) => {
-  const tasks = await Task.find().populate({path:'bids',select:'_id'});
+  const tasks = await Task.find();
 
   // SEND RESPONSE
   res.status(200).json({
@@ -103,7 +109,26 @@ exports.hireTasker = catchAsync(async (req, res, next) => {
 
   task.tasker = taskerId;
   await task.save();
+  
+  //  send message to tasker for accepting a bid 
+  client.messages.create({
+    body: `congrats ${tasker.userInfo.name} your bid has been accepted kindly contact to ${task.customer.userInfo.name} thanks`,
+    from: '+12052930626',
+    to: `+92${tasker.contactNo}`, 
+  }).then(message => console.log(message.sid));
 
+  const message=`congrats ${tasker.userInfo.name} your bid has been accepted kindly contact to ${task.customer.userInfo.name} thanks`;
+  //  send mail to tasker for accepting a bid 
+  sendMail({
+    email: tasker.userInfo.email,
+    message,
+    subject: 'bid accepted',
+    tasker,
+    template: 'simpleEmail.ejs',
+    url: '',
+  });
+  console.log(tasker.userInfo.email);
+  
   res.status(200).json({
     status: true,
     task,
