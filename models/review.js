@@ -39,14 +39,6 @@ const reviewSchema = new mongoose.Schema(
 //  and means each combination of tasker and customer always unique
 reviewSchema.index({ tasker: 1, customer: 1 }, { unique: true });
 
-reviewSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'customer',
-    select: 'userInfo',
-  });
-  next();
-});
-
 reviewSchema.statics.cal_averageRatings = async function (taskerId) {
   // id for which the current review belong to
   // using aregation pipeline

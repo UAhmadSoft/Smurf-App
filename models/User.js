@@ -3,67 +3,75 @@ const validator = require('validator');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please tell us your name!'],
-    unique: true,
-    trim: true,
-    maxlength: [20, 'must be less than or equal to 20'],
-    minlength: [3, 'must be greater than 3'],
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide your email'],
-    unique: true,
-    trim: true,
-    lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
-  },
-  photo: String,
-  role: {
-    type: String,
-    enum: ['customer', 'tasker', 'admin'],
-    required: [true, 'must choose one role Tasker OR Customer'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password'],
-    validate: {
-      // This only works on CREATE and SAVE!!!
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: 'Passwords are not the same!',
-    },
-  },
-  activationLink: {
-    type: String,
-  },
-  socialLogins: [
-    {
+const baseOptions = {
+  discriminatorKey: '__type',
+  collection: 'User',
+};
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
-      enum: ['google', 'facebook'],
+      required: [true, 'Please tell us your name!'],
+      unique: true,
+      trim: true,
+      maxlength: [20, 'must be less than or equal to 20'],
+      minlength: [3, 'must be greater than 3'],
     },
-  ],
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  activated: {
-    type: Boolean,
-    default: true,
+    email: {
+      type: String,
+      required: [true, 'Please provide your email'],
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email'],
+    },
+    photo: String,
+    role: {
+      type: String,
+      enum: ['customer', 'tasker', 'admin'],
+      required: [true, 'must choose one role Tasker OR Customer'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide a password'],
+      minlength: 8,
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Please confirm your password'],
+      validate: {
+        // This only works on CREATE and SAVE!!!
+        validator: function (el) {
+          return el === this.password;
+        },
+        message: 'Passwords are not the same!',
+      },
+    },
+    activationLink: {
+      type: String,
+    },
+    socialLogins: [
+      {
+        type: String,
+        enum: ['google', 'facebook'],
+      },
+    ],
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    activated: {
+      type: Boolean,
+      default: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
+    },
   },
-  active: {
-    type: Boolean,
-    default: true,
-    select: false,
-  },
-});
+  baseOptions
+);
 
 // userSchema.pre(/^find/, function (next) {
 //   next();

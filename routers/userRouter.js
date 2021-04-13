@@ -19,7 +19,7 @@ router.patch('/deactivateAccount', protect, authController.deactivateAccount);
 
 router
   .route('/')
-  .get(protect, userController.getAllUsers)
+  .get(userController.getAllUsers)
   .post(protect, userController.createUser);
 
 router
