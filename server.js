@@ -4,10 +4,11 @@ const colors = require('colors');
 const DBConnect = require('./utils/dbConnect');
 
 process.on('uncaughtException', (error) => {
-    // using uncaughtException event
-    console.log(' uncaught Exception => shutting down..... ');
-    console.log(error.name, error.message);
-    process.exit(1); //  emidiatly exists all from all the requests
+  // using uncaughtException event
+  console.log(' uncaught Exception => shutting down..... ');
+  console.log(`error`, error);
+  console.log(error.name, error.message);
+  process.exit(1); //  emidiatly exists all from all the requests
 });
 
 const app = require('./app');

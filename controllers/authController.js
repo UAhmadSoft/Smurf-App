@@ -8,30 +8,10 @@ const Tasker = require('../models/Tasker');
 const sendMail = require('../utils/email');
 
 const signToken = (user) => {
-  const id = (user.userInfo && user.userInfo._id) || user._id;
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     // payload + secret + expire time
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
-};
-
-const getProfile = async (user) => {
-  let profile;
-  if (user.role === 'customer') {
-    profile = await Customer.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  } else if (user.role === 'tasker') {
-    profile = await Tasker.findOne({
-      userInfo: user._id,
-    })
-      .populate('userInfo')
-      .exec();
-  }
-
-  return profile;
 };
 
 // cookie a small piece of text that a server sends to
@@ -44,7 +24,6 @@ const creatsendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
   res.cookie('jwt', token, cookieOptions);
   // Remove the password from output
   user.password = undefined;
@@ -56,22 +35,19 @@ const creatsendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  let user = await User.create(req.body);
+  // let user = await User.create(req.body);
 
+  let newUser;
   if (req.body.role === 'customer') {
-    newUser = await Customer.create({
-      userInfo: user._id,
-    });
+    newUser = await Customer.create(req.body);
   } else if (req.body.role === 'tasker')
-    newUser = await Tasker.create({
-      userInfo: user._id,
-    });
+    newUser = await Tasker.create(req.body);
   else return next(new AppError(`Plz provide a valid role`, 400));
 
   // Generate Account Activation Link
-  const activationToken = user.createAccountActivationLink();
+  const activationToken = newUser.createAccountActivationLink();
 
-  user.save({ validateBeforeSave: false });
+  newUser.save({ validateBeforeSave: false });
 
   // 4 Send it to Users Email
   const activationURL = `http://localhost:5000/api/v1/users/confirmMail/${activationToken}`;
@@ -82,18 +58,18 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const message = `GO to this link to activate your Smurf Account : ${activationURL} .`;
 
-  sendMail({
-    email: user.email,
-    message,
-    subject: 'Your Account Activation Link for Smurf App !',
-    user,
-    template: 'signupEmail.ejs',
-    url: activationURL,
-  });
+  // sendMail({
+  //   email: newUser.email,
+  //   message,
+  //   subject: 'Your Account Activation Link for Smurf App !',
+  //   newUser,
+  //   template: 'signupEmail.ejs',
+  //   url: activationURL,
+  // });
 
   res.status(201).json({
     status: 'success',
-    user,
+    newUser,
   });
   // creatsendToken(newUser, 201, res);
 });
@@ -127,17 +103,9 @@ exports.login = catchAsync(async (req, res, next) => {
       )
     );
 
-  let profile;
-
-  console.log(`user.role`, user.role);
-
-  if (user.role === 'admin' || user.role === 'customer care') profile = user;
-  else profile = await getProfile(user);
-
   // console.log(profile)
-
   // if eveything is ok
-  creatsendToken(profile, 200, res);
+  creatsendToken(user, 200, res);
 });
 
 exports.confirmMail = catchAsync(async (req, res) => {
@@ -273,10 +241,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await user.save();
 
-  const profile = await getProfile(user);
-
   // 4) Log user in , send JWT
-  creatsendToken(profile, 200, res);
+  creatsendToken(user, 200, res);
 });
 
 exports.deactivateAccount = catchAsync(async (req, res, next) => {
