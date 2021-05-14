@@ -70,7 +70,7 @@ const taskerSchema = new mongoose.Schema(
     ],
     cnic: {
       type: Number,
-      unique: true,
+      // unique: true,
       maxlength: [13, 'must  equal to 13'],
       minlength: [13, 'must  equal to 13'],
     },
