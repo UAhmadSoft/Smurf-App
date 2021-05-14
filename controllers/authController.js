@@ -49,6 +49,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   newUser.save({ validateBeforeSave: false });
 
+  // TODO - UnComment these Lines in Production
   // 4 Send it to Users Email
   const activationURL = `http://localhost:5000/api/v1/users/confirmMail/${activationToken}`;
 
