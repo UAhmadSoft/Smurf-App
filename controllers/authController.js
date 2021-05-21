@@ -59,14 +59,14 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const message = `GO to this link to activate your Smurf Account : ${activationURL} .`;
 
-  // sendMail({
-  //   email: newUser.email,
-  //   message,
-  //   subject: 'Your Account Activation Link for Smurf App !',
-  //   newUser,
-  //   template: 'signupEmail.ejs',
-  //   url: activationURL,
-  // });
+  sendMail({
+    email: newUser.email,
+    message,
+    subject: 'Your Account Activation Link for Smurf App !',
+    user: newUser,
+    template: 'signupEmail.ejs',
+    url: activationURL,
+  });
 
   res.status(201).json({
     status: 'success',

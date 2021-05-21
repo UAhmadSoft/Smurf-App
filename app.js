@@ -73,7 +73,6 @@ app.use('/api/v1/category', categoryRouter);
 //app.use('/api/v1/gig',gigRouter)
 // app.use('/api/v1/admin',adminRouter);
 
-
 // handling all (get,post,update,delete.....) unhandled routes
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on the server`, 404));
