@@ -2,13 +2,13 @@ const User = require('../models/User');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
+// const filterObj = (obj, ...allowedFields) => {
+//   const newObj = {};
+//   Object.keys(obj).forEach((el) => {
+//     if (allowedFields.includes(el)) newObj[el] = obj[el];
+//   });
+//   return newObj;
+// };
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   let query = User.find();
@@ -55,23 +55,24 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     );
   }
 
-  // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  // & OPTIONAL : Filtered out unwanted fields names that are not allowed to be updated
+  // & const filteredBody = filterObj(req.body, 'name', 'email');
 
   // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(
-    req.params.id,
-    filteredBody,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     status: 'success',
     user: updatedUser,
   });
+});
+
+exports.setMe = catchAsync(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {

@@ -11,6 +11,11 @@ router
   .post(protect, userController.createUser);
 
 router
+  .route('/me')
+  .get(protect, userController.setMe, userController.getUser)
+  .patch(protect, userController.setMe, userController.updateUser);
+
+router
   .route('/:id')
   .get(userController.getUser)
   .patch(protect, userController.updateUser)
