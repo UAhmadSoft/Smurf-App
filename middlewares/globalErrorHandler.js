@@ -51,6 +51,8 @@ const sendErrorProd = (err, res) => {
 
 module.exports = (err, req, res, next) => {
   // console.log(err.stack);
+  console.log('ERR CAUGHT IN GLOBAL MIDDLEWARE'.red.bold);
+  console.log(`ERR ${err}`.brightRed.bgBrightWhite.bold);
 
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
