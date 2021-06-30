@@ -10,14 +10,14 @@ const customerSchema = new mongoose.Schema({
   },
   contactNo: {
     type: Number,
-    unique: true,
-    required: false,
+    // unique: true,
+    // required: false,
     maxlength: [11, 'must  equal to 11'],
     minlength: [11, 'must  equal to 11'],
   },
   whatsAppNo: {
     type: Number,
-    unique: true,
+    // unique: true,
     // required: false,
     maxlength: [11, 'must  equal to 11'],
     minlength: [11, 'must  equal to 11'],
