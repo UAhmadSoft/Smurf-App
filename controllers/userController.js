@@ -15,6 +15,16 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
   if (req.query.role) query.find({ role: req.query.role });
 
+  if (req.query.fields) {
+    const fields = req.query.fields.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  }
+
   const users = await query;
   // SEND RESPONSE
   res.status(200).json({
