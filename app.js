@@ -9,6 +9,7 @@ const xss = require('xss-clean');
 const path = require('path');
 const hpp = require('hpp');
 
+const authRouter = require('./routers/authRouter');
 const userRouter = require('./routers/userRouter');
 const taskerRouter = require('./routers/taskerRouter');
 const customerRouter = require('./routers/customerRouter');
@@ -64,6 +65,8 @@ app.use((req, res, next) => {
 });
 
 // routes
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tasker', taskerRouter);
 app.use('/api/v1/customer', customerRouter);

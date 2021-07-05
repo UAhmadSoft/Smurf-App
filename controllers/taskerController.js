@@ -13,14 +13,27 @@ const { Mongoose } = require('mongoose');
 // };
 
 exports.getAllTaskers = catchAsync(async (req, res, next) => {
-  const tasker = await Tasker.find()
+  let query = User.find();
+
+  if (req.query.role) query.find({ role: req.query.role });
+
+  if (req.query.fields) {
+    const fields = req.query.fields.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  }
+
+  const taskers = await query;
 
   res.status(200).json({
     status: 'success',
-    results: tasker.length,
-    tasker,
+    results: taskers.length,
+    taskers,
   });
-
 });
 
 exports.updateProfile = catchAsync(async (req, res, next) => {
@@ -53,7 +66,6 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
 });
 
 exports.getTasker = catchAsync(async (req, res, next) => {
-
   const tasker = await Tasker.findById(req.params.id).populate('reviews');
 
   if (!tasker)

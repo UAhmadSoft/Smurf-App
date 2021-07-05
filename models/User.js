@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: Date,
     activated: {
       type: Boolean,
-      default: true, // TODO make this false in production
+      default: false,
     },
     active: {
       type: Boolean,

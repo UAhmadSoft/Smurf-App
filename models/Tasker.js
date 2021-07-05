@@ -10,14 +10,14 @@ const taskerSchema = new mongoose.Schema(
     },
     contactNo: {
       type: Number,
-      unique: true,
+      // unique: true,
       // required: [true, 'Must have contactNo'],
       maxlength: [11, 'must  equal to 11'],
       minlength: [11, 'must  equal to 11'],
     },
     whatsAppNo: {
       type: Number,
-      uniqu: true,
+      // unique: true,
       // required: [true, 'Must have contactNo'],
       maxlength: [11, 'must  equal to 11'],
       minlength: [11, 'must  equal to 11'],

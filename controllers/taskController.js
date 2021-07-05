@@ -4,6 +4,7 @@ const Task = require('../models/Task');
 const { Mongoose } = require('mongoose');
 const Bid = require('../models/Bid');
 const Tasker = require('../models/Tasker');
+const User = require('../models/User');
 const sendMail = require('../utils/email');
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -23,13 +24,15 @@ exports.getAllTasks = catchAsync(async (req, res, next) => {
 
 exports.createTask = catchAsync(async (req, res, next) => {
   const newtask = await Task.create(req.body);
+  const user = await User.findById(req.user._id);
 
   // * add task to customer tasks[_id]
-  req.user.tasks.unshift(newtask._id);
-  await req.user.save({ runValidators: true });
+  user.tasks.unshift(newtask._id);
+  user.tasks = [...new Set(user.tasks)];
+  await user.save({ validateBeforeSave: false });
 
   // * Save customerId in Task
-  newtask.customer = req.user._id;
+  newtask.customer = user._id;
   newtask.save();
 
   res.status(200).json({

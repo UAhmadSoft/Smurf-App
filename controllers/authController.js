@@ -212,7 +212,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.password = password;
   user.passwordConfirm = passwordConfirm;
 
-  await user.save({ runValidators: false });
+  await user.save({ validateBeforeSave: false });
 
   const token = signToken(user._id);
 

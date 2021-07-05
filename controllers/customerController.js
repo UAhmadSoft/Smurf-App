@@ -13,7 +13,21 @@ const { Mongoose } = require('mongoose');
 // };
 
 exports.getAllCustomers = catchAsync(async (req, res, next) => {
-  const customers = await Customer.find();
+  let query = User.find();
+
+  if (req.query.role) query.find({ role: req.query.role });
+
+  if (req.query.fields) {
+    const fields = req.query.fields.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  }
+
+  const customers = await query;
 
   // SEND RESPONSE
   res.status(200).json({
