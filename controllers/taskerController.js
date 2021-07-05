@@ -15,7 +15,6 @@ const { Mongoose } = require('mongoose');
 exports.getAllTaskers = catchAsync(async (req, res, next) => {
   const tasker = await Tasker.find()
 
-  // SEND RESPONSE
   res.status(200).json({
     status: 'success',
     results: tasker.length,
