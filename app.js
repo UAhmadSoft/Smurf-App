@@ -67,7 +67,6 @@ app.use((req, res, next) => {
 // routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tasker', taskerRouter);
 app.use('/api/v1/customer', customerRouter);
 app.use('/api/v1/task', taskRouter);
