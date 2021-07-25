@@ -17,14 +17,14 @@ const signToken = (user) => {
 // cookie a small piece of text that a server sends to
 const creatsendToken = (user, statusCode, res) => {
   const token = signToken(user);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ), // converting to milisec
-    httpOnly: true,
-  };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.cookie('jwt', token, cookieOptions);
+  // const cookieOptions = {
+  //   expires: new Date(
+  //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  //   ), // converting to milisec
+  //   httpOnly: true,
+  // };
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // res.cookie('jwt', token, cookieOptions);
   // Remove the password from output
   user.password = undefined;
   res.status(statusCode).json({
@@ -70,7 +70,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    newUser,
+    user: newUser,
   });
   // creatsendToken(newUser, 201, res);
 });
@@ -216,7 +216,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   const token = signToken(user._id);
 
-  res.cookie('jwt', token, cookieOptions);
+  // res.cookie('jwt', token, cookieOptions);
 
   res.status(200).json({
     status: 'success',
